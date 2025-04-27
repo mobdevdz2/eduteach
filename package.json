@@ -79,6 +79,7 @@
     "ai": "latest",
     "react-markdown": "latest",
     "react-syntax-highlighter": "latest",
+    "@daypilot/daypilot-lite-react": "latest",
     "fs": "latest",
     "path": "latest",
     "os": "latest"
