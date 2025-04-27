@@ -1,103 +1,352 @@
-import Image from "next/image";
+import { LandingNav } from "@/components/shared/landing-nav"
+import { Testimonials } from "@/components/shared/testimonials"
+import { PricingCards } from "@/components/shared/pricing-cards"
+import { FAQ } from "@/components/faq"
+import Link from "next/link"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { CheckCircle, GraduationCap, BookOpen, Users, Calendar, Award, ArrowRight } from "lucide-react"
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex flex-col min-h-screen">
+      {/* Header/Navigation */}
+      <LandingNav />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-slate-50">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
+              <div className="flex flex-col justify-center space-y-4">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                    Transform Your Teaching Experience
+                  </h1>
+                  <p className="max-w-[600px] text-slate-500 md:text-xl">
+                    The all-in-one platform for educators to create, manage, and deliver engaging learning experiences.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <Link href="/signup">
+                    <Button size="lg" className="gap-1">
+                      Get Started Free
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="#how-it-works">
+                    <Button size="lg" variant="outline">
+                      See How It Works
+                    </Button>
+                  </Link>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span>No credit card required</span>
+                </div>
+              </div>
+              <div className="mx-auto lg:mx-0 relative">
+                <Image
+                  src="/placeholder.svg?height=550&width=550"
+                  width={550}
+                  height={550}
+                  alt="EduTeach Dashboard"
+                  className="rounded-lg shadow-xl"
+                  priority
+                />
+                <div className="absolute -bottom-4 -left-4 bg-white p-4 rounded-lg shadow-lg border">
+                  <div className="flex items-center gap-2">
+                    <Award className="h-5 w-5 text-primary" />
+                    <span className="text-sm font-medium">Trusted by 10,000+ educators</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="w-full py-12 md:py-24 bg-white">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Features</div>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
+                  Everything You Need to Teach Effectively
+                </h2>
+                <p className="max-w-[700px] text-slate-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Our platform provides all the tools you need to create engaging lessons, manage your classroom, and
+                  track student progress.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3">
+              <Card>
+                <CardHeader>
+                  <BookOpen className="h-10 w-10 text-primary mb-2" />
+                  <CardTitle>Interactive Lessons</CardTitle>
+                  <CardDescription>
+                    Create engaging, multimedia-rich lessons that keep students motivated and focused.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Drag-and-drop lesson builder</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Embed videos, quizzes, and activities</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Real-time student engagement tracking</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Link href="/features/lessons">
+                    <Button variant="outline" className="w-full">
+                      Learn More
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Users className="h-10 w-10 text-primary mb-2" />
+                  <CardTitle>Classroom Management</CardTitle>
+                  <CardDescription>
+                    Easily manage students, assignments, and communications in one place.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Student profiles and progress tracking</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Automated grading and feedback</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Parent-teacher communication tools</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Link href="/features/classroom">
+                    <Button variant="outline" className="w-full">
+                      Learn More
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <Calendar className="h-10 w-10 text-primary mb-2" />
+                  <CardTitle>Scheduling & Planning</CardTitle>
+                  <CardDescription>
+                    Plan your curriculum, schedule classes, and manage your teaching calendar.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Curriculum planning tools</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Class scheduling and reminders</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>Resource allocation and management</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Link href="/features/planning">
+                    <Button variant="outline" className="w-full">
+                      Learn More
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section id="how-it-works" className="w-full py-12 md:py-24 bg-slate-50">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">How It Works</div>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
+                  Simple Steps to Transform Your Teaching
+                </h2>
+                <p className="max-w-[700px] text-slate-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Get started with EduTeach in just a few simple steps and revolutionize your classroom experience.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl gap-6 py-12 lg:grid-cols-3">
+              <div className="flex flex-col items-center space-y-2 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white">1</div>
+                <h3 className="text-xl font-bold">Sign Up</h3>
+                <p className="text-slate-500">Create your free account and set up your teacher profile.</p>
+              </div>
+              <div className="flex flex-col items-center space-y-2 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white">2</div>
+                <h3 className="text-xl font-bold">Create Your Classroom</h3>
+                <p className="text-slate-500">Add your students and organize your virtual classroom.</p>
+              </div>
+              <div className="flex flex-col items-center space-y-2 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white">3</div>
+                <h3 className="text-xl font-bold">Start Teaching</h3>
+                <p className="text-slate-500">Create lessons, assign work, and track student progress.</p>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Link href="/signup">
+                <Button size="lg">Get Started Today</Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section id="testimonials" className="w-full py-12 md:py-24 bg-white">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Testimonials</div>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Loved by Educators Worldwide</h2>
+                <p className="max-w-[700px] text-slate-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  See what teachers and educational institutions are saying about EduTeach.
+                </p>
+              </div>
+            </div>
+            <Testimonials />
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section id="pricing" className="w-full py-12 md:py-24 bg-slate-50">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">Pricing</div>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Simple, Transparent Pricing</h2>
+                <p className="max-w-[700px] text-slate-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Choose the plan that's right for you and your teaching needs.
+                </p>
+              </div>
+            </div>
+            <PricingCards />
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="w-full py-12 md:py-24 bg-white">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">FAQ</div>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Frequently Asked Questions</h2>
+                <p className="max-w-[700px] text-slate-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Find answers to common questions about EduTeach.
+                </p>
+              </div>
+            </div>
+            <FAQ />
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="w-full py-12 md:py-24 bg-primary text-primary-foreground">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">Ready to Transform Your Teaching?</h2>
+                <p className="max-w-[700px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Join thousands of educators who are already using EduTeach to create engaging learning experiences.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <Link href="/signup">
+                  <Button size="lg" variant="secondary" className="gap-1">
+                    Get Started Free
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  >
+                    Contact Sales
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4" />
+                <span>14-day free trial • No credit card required</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="border-t bg-white">
+        <div className="container flex flex-col gap-6 py-8 px-4 md:px-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
+            <Link href="/" className="flex items-center gap-2">
+              <GraduationCap className="h-6 w-6 text-primary" />
+              <span className="text-xl font-bold">EduTeach</span>
+            </Link>
+            <nav className="flex flex-wrap gap-4 md:gap-6">
+              <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
+                Features
+              </Link>
+              <Link href="#how-it-works" className="text-sm font-medium hover:underline underline-offset-4">
+                How It Works
+              </Link>
+              <Link href="#testimonials" className="text-sm font-medium hover:underline underline-offset-4">
+                Testimonials
+              </Link>
+              <Link href="#pricing" className="text-sm font-medium hover:underline underline-offset-4">
+                Pricing
+              </Link>
+              <Link href="#faq" className="text-sm font-medium hover:underline underline-offset-4">
+                FAQ
+              </Link>
+            </nav>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="text-sm text-slate-500">© {new Date().getFullYear()} EduTeach. All rights reserved.</div>
+            <div className="flex gap-4">
+              <Link href="/terms" className="text-sm text-slate-500 hover:underline underline-offset-4">
+                Terms
+              </Link>
+              <Link href="/privacy" className="text-sm text-slate-500 hover:underline underline-offset-4">
+                Privacy
+              </Link>
+              <Link href="/cookies" className="text-sm text-slate-500 hover:underline underline-offset-4">
+                Cookies
+              </Link>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
-  );
+  )
 }
