@@ -1,7 +1,7 @@
 import { LandingNav } from "@/components/shared/landing-nav"
 import { Testimonials } from "@/components/shared/testimonials"
 import { PricingCards } from "@/components/shared/pricing-cards"
-import { FAQ } from "@/components/faq"
+import { FAQ } from "@/components/shared/faq"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"

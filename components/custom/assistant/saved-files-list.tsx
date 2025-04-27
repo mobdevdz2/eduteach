@@ -9,6 +9,11 @@ import { Loader2, FileText, Trash2, Upload, Download, PlusCircle } from "lucide-
 import { toast } from "sonner"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { StringInput } from "@/components/shared/form-inputs"
+import { Form } from "@/components/ui"
 
 interface SavedFile {
   id: string
@@ -27,7 +32,18 @@ interface SavedFilesListProps {
 export function SavedFilesList({ userId, onUseFile }: SavedFilesListProps) {
   const [files, setFiles] = useState<SavedFile[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
+
+  const searchSchema = z.object({
+    searchTerm: z.string().optional(),
+  })
+
+  const searchForm = useForm({
+    resolver: zodResolver(searchSchema),
+    defaultValues: {
+      searchTerm: "",
+    },
+  })
+
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false)
 
   useEffect(() => {
@@ -134,7 +150,7 @@ export function SavedFilesList({ userId, onUseFile }: SavedFilesListProps) {
     [onUseFile],
   )
 
-  const filteredFiles = files.filter((file) => file.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredFiles = files.filter((file) => file.name.toLowerCase().includes((searchForm.watch("searchTerm") || "").toLowerCase()))
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`
@@ -170,13 +186,13 @@ export function SavedFilesList({ userId, onUseFile }: SavedFilesListProps) {
           </DialogContent>
         </Dialog>
       </div>
+      <Form {...searchForm} > 
+      <form onSubmit={searchForm.handleSubmit((data) => {})}>
 
-      <Input
-        placeholder="Search files..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4"
-      />
+      <StringInput form={searchForm} name = "searchTerm" label="Search"  placeholder="Search files..." />
+      </form>
+      </Form>
+ 
 
       {isLoading ? (
         <div className="flex justify-center p-8">
@@ -188,7 +204,7 @@ export function SavedFilesList({ userId, onUseFile }: SavedFilesListProps) {
             <FileText className="h-10 w-10 text-muted-foreground" />
             <h3 className="font-medium">No files found</h3>
             <p className="text-sm text-muted-foreground">
-              {searchTerm ? "Try a different search term" : "Upload files to get started"}
+              {searchForm.watch("searchTerm") ? "Try a different search term" : "Upload files to get started"}
             </p>
           </div>
         </Card>

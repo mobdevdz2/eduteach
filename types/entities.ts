@@ -1,4 +1,6 @@
-import { organizations, users, accounts, sessions, verificationTokens, subscriptions, featureLimits, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents } from "@/db/schema";
+import { organizations, users, accounts, sessions,chats, verificationTokens, subscriptions, featureLimits, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents } from "@/db/schema";
+import { calendarEventSelectSchema } from "@/validations/select";
+import { z } from "zod";
 
 export type Organizations = typeof organizations.$inferSelect;
 export type OrganizationsCreateInput = typeof organizations.$inferInsert;
@@ -60,6 +62,10 @@ export type LessonPlans = typeof lessonPlans.$inferSelect;
 export type LessonPlansCreateInput = typeof lessonPlans.$inferInsert;
 export type LessonPlansUpdateInput = typeof lessonPlans.$inferSelect;
 
-export type CalendarEvents = typeof calendarEvents.$inferSelect;
+export type CalendarEvents = z.infer<typeof calendarEventSelectSchema>;
 export type CalendarEventsCreateInput = typeof calendarEvents.$inferInsert;
 export type CalendarEventsUpdateInput = typeof calendarEvents.$inferSelect;
+
+export type Chats = typeof chats.$inferSelect;
+export type ChatsCreateInput = typeof chats.$inferInsert;
+export type ChatsUpdateInput = typeof chats.$inferSelect;

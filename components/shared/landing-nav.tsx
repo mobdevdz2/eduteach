@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation"
 import { GraduationCap, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { useSession } from "next-auth/react"
-import { signOut } from "@/auth"
+import { signOut, useSession } from "next-auth/react"
 
 export function LandingNav() {
   const pathname = usePathname()
@@ -43,7 +42,10 @@ export function LandingNav() {
               <Link href="/dashboard">
                 <Button variant="default">Dashboard</Button>
               </Link>
-              <Button variant="outline" onClick={() => signOut({ redirectTo: "/" })} className="hidden md:inline-flex">
+              <Button variant="outline" onClick={() => {
+                
+                signOut({ redirectTo: "/" } )
+                }} className="hidden md:inline-flex">
                 Log Out
               </Button>
             </>

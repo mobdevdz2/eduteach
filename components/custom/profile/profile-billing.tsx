@@ -21,11 +21,21 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { StringInput } from "@/components/shared/form-inputs"
+import { useForm } from "react-hook-form"
+import { Form } from "@/components/ui/form" // Ensure this path is correct
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 interface ProfileBillingProps {
   user: any
 }
-
+const cardSelectSchema = z.object({
+  cardNumber: z.string().min(16, "Card number must be 16 digits").max(16, "Card number must be 16 digits"),
+  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Invalid expiry date format (MM/YY)"),
+  cvc: z.string().min(3, "CVC must be 3 digits").max(3, "CVC must be 3 digits"),
+  cardName: z.string().min(1, "Name on card is required"),
+})
 // Mock subscription data
 const subscriptionData = {
   plan: "Professional",
@@ -68,8 +78,34 @@ export function ProfileBilling({ user }: ProfileBillingProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isChangePlanDialogOpen, setIsChangePlanDialogOpen] = useState(false)
   const [isPaymentMethodDialogOpen, setIsPaymentMethodDialogOpen] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState(subscriptionData.plan.toLowerCase())
 
+
+  const [selectedPlan, setSelectedPlan] = useState(subscriptionData.plan)
+  const [selectedPlanValue, setSelectedPlanValue] = useState(subscriptionData.plan)
+  const handlePlanChange = (value: string) => {
+    setSelectedPlan(value)
+    setSelectedPlanValue(value)
+  }
+  const planSelectSchema = z.object({
+    plan: z.enum(["free", "professional", "school"], {
+      errorMap: () => ({ message: "Please select a plan" }),
+    }),
+  })
+  const planForm = useForm({
+    resolver: zodResolver(planSelectSchema),
+    defaultValues: {
+      plan: subscriptionData.plan as "free" | "professional" | "school",
+    }
+  })
+  const cardForm = useForm({
+    resolver: zodResolver(cardSelectSchema),
+    defaultValues: {
+      cardNumber: "",
+      expiryDate: "",
+      cvc: "",
+      cardName: "",
+    }
+  })
   const handleChangePlan = async () => {
     setIsLoading(true)
 
@@ -287,35 +323,40 @@ export function ProfileBilling({ user }: ProfileBillingProps) {
                 <DialogTitle>Update Payment Method</DialogTitle>
                 <DialogDescription>Enter your new payment information.</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleUpdatePaymentMethod} className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="cardNumber">Card Number</Label>
-                  <Input id="cardNumber" placeholder="1234 5678 9012 3456" required />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+              <Form {...cardForm}>
+                <form onSubmit={handleUpdatePaymentMethod} className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="expiryDate">Expiry Date</Label>
-                    <Input id="expiryDate" placeholder="MM/YY" required />
+                    <StringInput label="Card Number" name="cardNumber" placeholder="1234 5678 9012 3456" required />
+
                   </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <StringInput label="Expiry Date" name="expiryDate" placeholder="MM/YY" required />
+
+
+                    </div>
+                    <div className="space-y-2">
+                      <StringInput label="CVC" name="cvc" placeholder="123" required />
+
+
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="cvc">CVC</Label>
-                    <Input id="cvc" placeholder="123" required />
+                    <StringInput label=">Name on Card" name="cardName" placeholder="John Doe" required />
+
+
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="cardName">Name on Card</Label>
-                  <Input id="cardName" placeholder="John Doe" required />
-                </div>
-
-                <DialogFooter>
-                  <Button type="submit" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Update Payment Method
-                  </Button>
-                </DialogFooter>
-              </form>
+                  <DialogFooter>
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Update Payment Method
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
             </DialogContent>
           </Dialog>
         </CardFooter>

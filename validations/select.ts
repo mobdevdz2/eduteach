@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { organizations, users, accounts, sessions, verificationTokens, subscriptions, featureLimits, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents } from '@/db/schema';
+import { DayPilot } from '@daypilot/daypilot-lite-react';
 import { createSchemaFactory } from 'drizzle-zod';
+import { z } from 'zod';
 
 
 const { createSelectSchema } = createSchemaFactory({
@@ -29,4 +31,7 @@ export const assignmentSubmissionSelectSchema = createSelectSchema(assignmentSub
 export const gradeSelectSchema = createSelectSchema(grades)
 export const materialSelectSchema = createSelectSchema(materials)
 export const lessonPlanSelectSchema = createSelectSchema(lessonPlans)
-export const calendarEventSelectSchema = createSelectSchema(calendarEvents)
+export const calendarEventSelectSchema = createSelectSchema(calendarEvents, {
+  start: z.date().transform(date => new DayPilot.Date(date)),
+  end: z.date().transform(date => new DayPilot.Date(date))
+})

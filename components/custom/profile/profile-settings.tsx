@@ -8,11 +8,16 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { Loader2, AlertTriangle } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { settingsSchema, passwordSchema } from "@/validations/select" // Assuming you have these schemas
+import { StringInput } from "@/components/shared/form-inputs"
+import { Form } from "@/components/ui/form"
+import { ModeToggle } from "@/components/ui/theme-button"
 
 interface ProfileSettingsProps {
   user: any
@@ -20,37 +25,40 @@ interface ProfileSettingsProps {
 
 export function ProfileSettings({ user }: ProfileSettingsProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const [settings, setSettings] = useState({
-    emailNotifications: true,
-    marketingEmails: false,
-    theme: "light",
-    language: "english",
-    timezone: "UTC",
-    twoFactorAuth: false,
-  })
-
-  const [passwordForm, setPasswordForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  })
-
   const [passwordError, setPasswordError] = useState("")
 
-  const handleSettingChange = (key: string, value: any) => {
-    setSettings((prev) => ({ ...prev, [key]: value }))
-  }
+  // Form for general settings
+  const settingsForm = useForm({
+    resolver: zodResolver(settingsSchema),
+    defaultValues: {
+      emailNotifications: true,
+      marketingEmails: false,
+      theme: "light",
+      language: "english",
+      timezone: "UTC",
+      twoFactorAuth: false,
+    }
+  })
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setPasswordForm((prev) => ({ ...prev, [name]: value }))
-    setPasswordError("")
+  // Separate form for password change
+  const passwordForm = useForm({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    }
+  })
+
+  const handleSettingChange = (key: string, value: any) => {
+    settingsForm.setValue(key, value);
   }
 
   const saveSettings = async () => {
     setIsLoading(true)
 
     try {
+      const data = settingsForm.getValues();
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
@@ -58,7 +66,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       // const response = await fetch('/api/settings', {
       //   method: 'PUT',
       //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(settings),
+      //   body: JSON.stringify(data),
       // });
 
       toast.success("Settings updated successfully")
@@ -70,20 +78,19 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
     }
   }
 
-  const changePassword = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+  const changePassword = async (data) => {
+    if (data.newPassword !== data.confirmPassword) {
       setPasswordError("New passwords do not match")
       return
     }
 
-    if (passwordForm.newPassword.length < 8) {
+    if (data.newPassword.length < 8) {
       setPasswordError("Password must be at least 8 characters long")
       return
     }
 
     setIsLoading(true)
+    setPasswordError("")
 
     try {
       // Simulate API call
@@ -93,11 +100,11 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       // const response = await fetch('/api/change-password', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(passwordForm),
+      //   body: JSON.stringify(data),
       // });
 
       toast.success("Password changed successfully")
-      setPasswordForm({
+      passwordForm.reset({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
@@ -109,6 +116,8 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
       setIsLoading(false)
     }
   }
+
+  const settings = settingsForm.getValues();
 
   return (
     <div className="space-y-6">
@@ -155,16 +164,7 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="theme">Theme</Label>
-              <Select value={settings.theme} onValueChange={(value) => handleSettingChange("theme", value)}>
-                <SelectTrigger id="theme">
-                  <SelectValue placeholder="Select theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
-                </SelectContent>
-              </Select>
+             <ModeToggle />
             </div>
 
             <div className="space-y-2">
@@ -226,59 +226,50 @@ export function ProfileSettings({ user }: ProfileSettingsProps) {
           </div>
 
           <Separator />
+          <Form {...passwordForm}>
 
-          <form onSubmit={changePassword} className="space-y-4">
-            <h3 className="text-lg font-medium">Change Password</h3>
+            <form onSubmit={passwordForm.handleSubmit(changePassword)} className="space-y-4">
+              <h3 className="text-lg font-medium">Change Password</h3>
 
-            {passwordError && (
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{passwordError}</AlertDescription>
-              </Alert>
-            )}
+              {passwordError && (
+                <Alert variant="destructive">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{passwordError}</AlertDescription>
+                </Alert>
+              )}
 
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <Input
-                id="currentPassword"
+              <StringInput
+                label="Current Password"
+                placeholder="Enter your current password"
+                form={passwordForm}
                 name="currentPassword"
                 type="password"
-                value={passwordForm.currentPassword}
-                onChange={handlePasswordChange}
-                required
               />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
-              <Input
-                id="newPassword"
+              <StringInput
+                label="New Password"
+                placeholder="Enter new password"
+                form={passwordForm}
                 name="newPassword"
                 type="password"
-                value={passwordForm.newPassword}
-                onChange={handlePasswordChange}
-                required
+                description="Password must be at least 8 characters long"
               />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
-              <Input
-                id="confirmPassword"
+              <StringInput
+                label="Confirm New Password"
+                placeholder="Confirm your new password"
+                form={passwordForm}
                 name="confirmPassword"
                 type="password"
-                value={passwordForm.confirmPassword}
-                onChange={handlePasswordChange}
-                required
               />
-            </div>
 
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Change Password
-            </Button>
-          </form>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Change Password
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

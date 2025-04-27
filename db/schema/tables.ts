@@ -47,6 +47,7 @@ const nextAuthSchema = pgSchema("next_auth");
     {
       id: uuid("id").defaultRandom().primaryKey(),
       name: text("name"),
+      assistantId: text("assistant_id"),
       email: text("email").notNull().unique(),
       emailVerified: timestamp("emailVerified", { withTimezone: true }),
       image: text("image"),
@@ -97,6 +98,9 @@ const nextAuthSchema = pgSchema("next_auth");
       unique("provider_unique").on(table.provider, table.providerAccountId),
     ]
   );
+
+
+
   
   export const sessions = nextAuthSchema.table("sessions", {
     id: uuid("id").defaultRandom().primaryKey(),
@@ -447,14 +451,29 @@ export const subscriptions = pgTable(
     }
   );
   
+  export const chats = pgTable(
+    "chats",
+    {
+      id: uuid("id").defaultRandom().primaryKey(),
+      name: text("name").notNull(),
+      openaiThreadId: text("openai_thread_id").notNull(),
+      userId: uuid("user_id")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+      createdAt: timestamp("created_at").defaultNow().notNull(),
+      updatedAt: timestamp("updated_at").defaultNow().notNull(),
+      lastMessageAt: timestamp("last_message_at").defaultNow().notNull(),
+      isArchived: boolean("is_archived").default(false),
+      category: text("category"),
+    })
   
   // Calendar Events
   export const calendarEvents = pgTable("calendar_events", {
     id: uuid("id").defaultRandom().primaryKey(),
-    title: text("title").notNull(),
+    text: text("title").notNull(),
     description: text("description"),
-    startDate: timestamp("start_date").notNull(),
-    endDate: timestamp("end_date").notNull(),
+    start: timestamp("start_date").notNull(),
+    end: timestamp("end_date").notNull(),
     allDay: boolean("all_day").default(false).notNull(),
     location: text("location"),
     type: eventTypeEnum("type").notNull().default("class"),

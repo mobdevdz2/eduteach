@@ -1,10 +1,22 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema";
+
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+      assistantId: string;
+      organizationId: string;
+      role: string;
+    };
+}}
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -35,6 +47,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           id: user[0].id,
           email: user[0].email,
           name: user[0].name,
+          assistantId: user[0].assistantId,
+          organizationId: user[0].organizationId,
+          role: user[0].role,
         };
       },
     }),

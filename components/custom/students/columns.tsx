@@ -88,11 +88,7 @@ export const columns = (
     cell: ({ row }) => <div>{row.original.id}</div>,
   },
 
-  {
-    accessorKey: "studentId",
-    header: "StudentId",
-    cell: ({ row }) => <div>{row.original.studentId}</div>,
-  },
+ 
 
   {
     accessorKey: "firstName",
@@ -172,11 +168,7 @@ export const columns = (
     cell: ({ row }) => <div>{row.original.relationship}</div>,
   },
 
-  {
-    accessorKey: "userId",
-    header: "userId",
-    cell: ({ row }) => <div>{row.original.userId}</div>,
-  },
+
 
   {
     accessorKey: "organizationId",
@@ -184,23 +176,9 @@ export const columns = (
     cell: ({ row }) => <div>{row.original.organizationId}</div>,
   },
 
-  {
-    accessorKey: "createdAt",
-    header: "CreatedAt",
-    cell: ({ row }) => <div>{row.original.createdAt}</div>,
-  },
+  
 
-  {
-    accessorKey: "updatedAt",
-    header: "UpdatedAt",
-    cell: ({ row }) => <div>{row.original.updatedAt}</div>,
-  },
-
-  {
-    accessorKey: "enableRLS",
-    header: "EnableRLS",
-    cell: ({ row }) => <div>{row.original.enableRLS}</div>,
-  },
+  
   {
     id: "actions",
     cell: ({ row }) => (

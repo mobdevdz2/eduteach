@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
-import { ProfileInfo } from "@components/shared/profile/profile-info"
-import { ProfileSettings } from "@components/shared/profile/profile-settings"
-import { ProfileBilling } from "@components/shared/profile/profile-billing"
+import { ProfileInfo } from "@/components/custom/profile/profile-info"
+import { ProfileSettings } from "@/components/custom/profile/profile-settings"
+import { ProfileBilling } from "@/components/custom/profile/profile-billing"
 import { Loader2 } from "lucide-react"
 
 export default function ProfilePage() {

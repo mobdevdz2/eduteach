@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { users, organizations, subscriptions, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents } from "./tables";
+import { users, organizations, subscriptions, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents, chats } from "./tables";
   
 
 // Relations
@@ -17,7 +17,9 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     materials: many(materials),
     lessonPlans: many(lessonPlans),
     calendarEvents: many(calendarEvents),
-  }));
+    assignments: many(assignments),
+    grades: many(grades),
+    chats: many(chats),}));
   
   export const organizationsRelations = relations(organizations, ({ many }) => ({
     users: many(users),

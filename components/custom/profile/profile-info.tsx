@@ -6,11 +6,13 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
 import { Loader2, Mail, Building, MapPin } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { userSelectSchema } from "@/validations/select"
+import { StringInput } from "@/components/shared/form-inputs"
+import { toast } from "sonner"
+import { Form } from "@/components/ui/form"
 
 interface ProfileInfoProps {
   user: any
@@ -19,24 +21,22 @@ interface ProfileInfoProps {
 export function ProfileInfo({ user }: ProfileInfoProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
-    email: user.email || "",
-    bio: user.bio || "",
-    jobTitle: user.jobTitle || "Teacher",
-    school: user.school || "",
-    location: user.location || "",
-    phone: user.phone || "",
+  
+  const form = useForm({
+    resolver: zodResolver(userSelectSchema),
+    defaultValues: {
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.email || "",
+      bio: user.bio || "",
+      jobTitle: user.jobTitle || "",
+      school: user.school || "",
+      location: user.location || "",
+      phone: user.phone || ""
+    }
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (data) => {
     setIsLoading(true)
 
     try {
@@ -47,7 +47,7 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
       // const response = await fetch('/api/profile', {
       //   method: 'PUT',
       //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
+      //   body: JSON.stringify(data),
       // });
 
       toast.success("Profile updated successfully")
@@ -60,8 +60,9 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
     }
   }
 
-  const fullName = `${formData.firstName} ${formData.lastName}`
-  const initials = `${formData.firstName?.[0] || ""}${formData.lastName?.[0] || ""}`.toUpperCase()
+  const formData = form.getValues()
+  const fullName = `${formData?.firstName} ${formData?.lastName}`
+  const initials = `${formData?.firstName?.[0] || ""}${formData?.lastName?.[0] || ""}`.toUpperCase()
 
   return (
     <div className="space-y-6">
@@ -72,78 +73,85 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
         </CardHeader>
         <CardContent>
           {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <Form {...form} className="space-y-4">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
               <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  disabled
-                />
-                <p className="text-sm text-muted-foreground">Your email cannot be changed as it is used for login.</p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
-                  name="bio"
-                  value={formData.bio}
-                  onChange={handleChange}
-                  placeholder="Tell us about yourself"
-                  className="min-h-[100px]"
-                />
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="jobTitle">Job Title</Label>
-                  <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} />
-                </div>
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="school">School/Institution</Label>
-                  <Input id="school" name="school" value={formData.school} onChange={handleChange} />
-                </div>
-              </div>
-
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    placeholder="City, Country"
+                <div className="flex-1">
+                  <StringInput
+                    label="First Name"
+                    placeholder="Enter your first name"
+                    form={form}
+                    name="firstName"
                   />
                 </div>
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
+                <div className="flex-1">
+                  <StringInput
+                    label="Last Name"
+                    placeholder="Enter your last name"
+                    form={form}
+                    name="lastName"
+                  />
+                </div>
+              </div>
+
+              <StringInput
+                label="Email"
+                description="Your email cannot be changed as it is used for login."
+                placeholder="your.email@example.com"
+                form={form}
+                type="email"
+                name="email"
+                disabled
+              />
+
+              <StringInput
+                label="Bio"
+                placeholder="Tell us about yourself"
+                form={form}
+                name="bio"
+                multiline
+                className="min-h-[100px]"
+              />
+
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <StringInput
+                    label="Job Title"
+                    placeholder="Enter your job title"
+                    form={form}
+                    name="jobTitle"
+                  />
+                </div>
+                <div className="flex-1">
+                  <StringInput
+                    label="School/Institution"
+                    placeholder="Enter your school or institution"
+                    form={form}
+                    name="school"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <StringInput
+                    label="Location"
+                    placeholder="City, Country"
+                    form={form}
+                    name="location"
+                  />
+                </div>
+                <div className="flex-1">
+                  <StringInput
+                    label="Phone Number"
                     placeholder="(123) 456-7890"
+                    form={form}
+                    name="phone"
                   />
                 </div>
               </div>
             </form>
+            </Form>
           ) : (
             <div className="space-y-6">
               <div className="flex items-center gap-4">
@@ -153,35 +161,35 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
                 </Avatar>
                 <div>
                   <h2 className="text-2xl font-bold">{fullName}</h2>
-                  <p className="text-muted-foreground">{formData.jobTitle}</p>
+                  <p className="text-muted-foreground">{formData?.jobTitle}</p>
                 </div>
               </div>
 
               <div className="grid gap-4 pt-4">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
-                  <span>{formData.email}</span>
+                  <span>{formData?.email}</span>
                 </div>
 
-                {formData.school && (
+                {formData?.school && (
                   <div className="flex items-center gap-2">
                     <Building className="h-4 w-4 text-muted-foreground" />
-                    <span>{formData.school}</span>
+                    <span>{formData?.school}</span>
                   </div>
                 )}
 
-                {formData.location && (
+                {formData?.location && (
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{formData.location}</span>
+                    <span>{formData?.location}</span>
                   </div>
                 )}
               </div>
 
-              {formData.bio && (
+              {formData?.bio && (
                 <div className="pt-4">
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">About</h3>
-                  <p>{formData.bio}</p>
+                  <p>{formData?.bio}</p>
                 </div>
               )}
             </div>
@@ -193,7 +201,7 @@ export function ProfileInfo({ user }: ProfileInfoProps) {
               <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isLoading}>
                 Cancel
               </Button>
-              <Button onClick={handleSubmit} disabled={isLoading}>
+              <Button onClick={form.handleSubmit(handleSubmit)} disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save Changes
               </Button>

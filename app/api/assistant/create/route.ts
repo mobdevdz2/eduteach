@@ -39,7 +39,7 @@ You should be professional, supportive, and focused on educational best practice
       model: "gpt-4o",
       tools: [
         {
-          type: "retrieval", // Enable file upload and retrieval
+          type: "file_search", // Enable file upload and retrieval
         },
       ],
     })
