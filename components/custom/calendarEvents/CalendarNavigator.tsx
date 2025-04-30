@@ -3,6 +3,7 @@ import { DayPilot, DayPilotNavigator } from "@daypilot/daypilot-lite-react"
 import { CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import { Calendar } from "@/components/ui"
 
 interface CalendarNavigatorProps {
   date: DayPilot.Date
@@ -13,16 +14,14 @@ interface CalendarNavigatorProps {
 export function CalendarNavigator({ date, onDateChange, onAddEvent }: CalendarNavigatorProps) {
   return (
     <CardContent className="p-4">
-      <DayPilotNavigator
-        selectMode={"Day"}
-        showMonths={1}
-        skipMonths={1}
-        startDate={date}
-        selectionDay={new  DayPilot.Date(date)}
-        onTimeRangeSelected={(args) => {
-          onDateChange(args.day)
-        }}
-      />
+       {/* <Calendar
+      mode="single"
+      selected={date.toDate()}
+      onSelect={(date) => {
+        onDateChange(new DayPilot.Date(date?.toISOString()))
+      }}
+      className="rounded-md border shadow"
+    /> */}
       <div className="mt-4">
         <Button
           className="w-full mb-2"

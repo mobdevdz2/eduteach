@@ -3,18 +3,18 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Grid, List, Plus } from "lucide-react";
 import { LessonPlans } from "@/types/entities";
-import { LessonPlansClass } from "@/classes/lessonplans";
+import { LessonPlansClass } from "@/classes/lessonPlans";
 import { useForm } from "react-hook-form";
-import { lessonplanSelectSchema } from "@/validations/select";
+import { lessonPlanSelectSchema } from "@/validations/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { columns } from "@/components/custom/lessonplans/columns";
+import { columns } from "@/components/custom/lessonPlans/columns";
 import Link from "next/link";
 
 export default function LessonPlansView({ data }: { data: LessonPlans[] }) {
   const [viewMode, setViewMode] = useState("card");
 
   const formSchema = useForm({
-    resolver: zodResolver(lessonplanSelectSchema)
+    resolver: zodResolver(lessonPlanSelectSchema)
   });
 
   const handleViewModeChange = (mode: "card" | "table") => {

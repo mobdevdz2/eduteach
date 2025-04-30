@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils"
 import { getEventColor } from "@/lib/calendar-utils"
 import { calendarEventInsertSchema } from "@/validations/insert"
 import { z } from "zod"
+import { useEffect } from "react"
+import { useSession } from "next-auth/react"
 
 interface EventFormProps {
   defaultValues: Partial<CalendarEvents>
@@ -34,6 +36,7 @@ export function EventForm({
     resolver: zodResolver(calendarEventInsertSchema),
     defaultValues: defaultValues},)
 
+  const session = useSession()
   function handleUpdateDate(field: any, date: Date | undefined, timeStr?: string) {
     if (!date) return
     
@@ -47,6 +50,10 @@ export function EventForm({
     
     field.onChange(updatedDate.toISOString())
   }
+
+  useEffect(() => {
+    form.setValue("userId", session.data?.user.id)
+  },[session])
 
   return (
     <Form {...form}>

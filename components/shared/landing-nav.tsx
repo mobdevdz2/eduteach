@@ -21,16 +21,20 @@ export function LandingNav() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white">
+    <header className="sticky top-0 z-50 w-full border-b bg-white dark:bg-slate-900 dark:border-slate-800">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
             <GraduationCap className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">EduTeach</span>
+            <span className="text-xl font-bold dark:text-white">EduTeach</span>
           </Link>
           <nav className="hidden md:flex gap-6 ml-6">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="text-sm font-medium hover:underline underline-offset-4">
+              <Link 
+                key={item.href} 
+                href={item.href} 
+                className="text-sm font-medium hover:underline underline-offset-4 dark:text-slate-200"
+              >
                 {item.name}
               </Link>
             ))}
@@ -42,44 +46,59 @@ export function LandingNav() {
               <Link href="/dashboard">
                 <Button variant="default">Dashboard</Button>
               </Link>
-              <Button variant="outline" onClick={() => {
-                
-                signOut({ redirectTo: "/" } )
-                }} className="hidden md:inline-flex">
+              <Button 
+                variant="outline" 
+                onClick={() => signOut({ redirectTo: "/" })} 
+                className="hidden md:inline-flex dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
+              >
                 Log Out
               </Button>
             </>
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outline">Log In</Button>
+                <Button 
+                  variant="outline" 
+                  className="dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
+                >
+                  Log In
+                </Button>
               </Link>
               <Link href="/signup" className="hidden md:inline-flex">
                 <Button>Sign Up</Button>
               </Link>
             </>
           )}
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden dark:text-slate-200 dark:hover:bg-slate-800" 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
       </div>
       {mobileMenuOpen && (
-        <div className="md:hidden border-t">
+        <div className="md:hidden border-t dark:border-slate-800">
           <div className="container py-2">
             <nav className="flex flex-col space-y-3 py-2">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-sm font-medium hover:underline underline-offset-4"
+                  className="text-sm font-medium hover:underline underline-offset-4 dark:text-slate-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
               {status === "authenticated" ? (
-                <Button variant="outline" onClick={() => signOut({ redirectTo: "/" })} className="mt-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => signOut({ redirectTo: "/" })} 
+                  className="mt-2 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
+                >
                   Log Out
                 </Button>
               ) : (

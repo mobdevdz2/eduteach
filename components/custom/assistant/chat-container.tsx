@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { useAssistant } from "@ai-sdk/react"
+import { useAssistant, UseAssistantHelpers } from "@ai-sdk/react"
 import { ChevronLeft, ChevronRight, FileText, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -34,6 +34,7 @@ interface ChatContainerProps {
   threads: ChatThread[]
   uploadedFiles: UploadedFile[]
   updateUploadedFiles: (files: UploadedFile[]) => void
+  assistant: UseAssistantHelpers
 }
 
 export default function ChatContainer({
@@ -46,21 +47,13 @@ export default function ChatContainer({
   threads,
   uploadedFiles,
   updateUploadedFiles,
+  assistant
 }: ChatContainerProps) {
   const [activeTab, setActiveTab] = useState("chat")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const { mutateAsync: uploadFile } = useUploadFile()
 
-  const { messages, input, handleInputChange, submitMessage, status: assistantStatus } = useAssistant({
-    api: "/api/assistant",
-    body: {
-      assistantId: session?.user?.assistantId,
-      threadId: openaiThreadId,
-    },
-    onError: (error) => {
-      toast.error(`Error: ${error.message}`)
-    },
-  })
+  const { messages, input, handleInputChange, submitMessage, status: assistantStatus } = assistant
 
   // Handle file upload
   const handleFileUpload = async (files: File[], fileIds: string[]) => {

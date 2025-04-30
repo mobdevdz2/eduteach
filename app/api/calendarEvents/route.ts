@@ -15,6 +15,8 @@ export async function POST(req) {
 
 export async function PUT(req) {
   const body = await req.json();
+
+  console.log("calendarEvents PUT body", body);
   const data = await serverService.calendarEvents.update?.(body);
   return NextResponse.json(data);
 }

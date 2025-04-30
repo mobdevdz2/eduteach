@@ -22,7 +22,7 @@ import {
 import { ZodSchema } from "zod";
 import { PgTable, TableConfig } from "drizzle-orm/pg-core";
 import { CreateInputTypes } from "@/types/services";
-import { and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 const checkInsert = (values: any, schema: ZodSchema) => {
   const singleResult = schema.safeParse(values);
@@ -43,8 +43,8 @@ const checkInsert = (values: any, schema: ZodSchema) => {
 const createHandler = <T extends PgTable<TableConfig>>(table: T, schema: ZodSchema) => (values: any) =>
   db.insert(table).values(checkInsert(values, schema)).returning();
 
-const updateHandler = <T extends PgTable<TableConfig>>(table: T, schema: ZodSchema) => (values: any) =>
-  db.update(table).set(checkInsert(values, schema)).returning();
+const updateHandler = <T extends PgTable<TableConfig>>(table: T, schema: ZodSchema) => ({id, ...values}: any) =>
+  { console.log({values}); return db.update(table).set(checkInsert(values, schema)).where(eq(table?.id, id)).returning();}
 
 const deleteHandler = <T extends PgTable<TableConfig>>(table: T) => (config: any) =>
   db.delete(table).where(config).returning();

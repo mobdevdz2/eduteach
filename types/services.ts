@@ -36,12 +36,12 @@ type SafeReturnType<T, M extends string> =
 // Define return types for each server operation
 export type ServerGetter = {
   [K in keyof typeof db.query]: {
-    findMany?: SafeReturnType<(typeof db.query)[K], "findMany">;
-    findFirst?: SafeReturnType<(typeof db.query)[K], "findFirst">;
+    findMany?: ReturnType<(typeof db.query)[K]["findMany"]>;
+    findFirst?: ReturnType<(typeof db.query)[K]["findFirst"]>;
     // findUnique?: SafeReturnType<(typeof db.query)[K], "findUnique">;
-    create: SafeReturnType<(typeof db.query)[K], "create">;
-    update: SafeReturnType<(typeof db.query)[K], "update">;
-    delete: SafeReturnType<(typeof db.query)[K], "delete">;
+    create: ReturnType<(typeof db.query)[K]["create"]>;
+    update: ReturnType<(typeof db.query)[K]["update"]>;
+    delete: ReturnType<(typeof db.query)[K]["delete"]>;
   };
 };
 
@@ -108,7 +108,7 @@ export type ApiService = {
     routes: RouteGenerators;
     
     // Standard CRUD operations
-    findMany: (params?: Partial<CreateInputTypes[K]>) => Promise<Promisify<NonNullable<Server[K]["findMany"]>>>;
+    findMany: (params?: Partial<CreateInputTypes[K]>) => Server[K]["findMany"];
     findFirst: (params: Partial<CreateInputTypes[K]>) => Promise<Promisify<NonNullable<Server[K]["findFirst"]>>>;
     // findUnique: (params: Partial<CreateInputTypes[K]>) => Promise<Promisify<NonNullable<Server[K]["findUnique"]>>>;
     create: (data: Partial<CreateInputTypes[K]>) => Promise<Promisify<ReturnType<NonNullable<Server[K]["findMany"]>>>>;

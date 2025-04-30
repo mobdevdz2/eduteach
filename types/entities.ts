@@ -69,3 +69,53 @@ export type CalendarEventsUpdateInput = typeof calendarEvents.$inferSelect;
 export type Chats = typeof chats.$inferSelect;
 export type ChatsCreateInput = typeof chats.$inferInsert;
 export type ChatsUpdateInput = typeof chats.$inferSelect;
+
+
+export interface DashboardStats {
+    totalStudents: number
+    totalClasses: number
+    totalAssignments: number
+    completionRate: number
+    upcomingEvents: number
+    recentActivity: ActivityItem[]
+  }
+  
+  export interface ActivityItem {
+    id: string
+    type: "assignment" | "class" | "event" | "message"
+    title: string
+    description: string
+    date: string
+    user?: {
+      id: string
+      name: string
+      avatar?: string
+    }
+  }
+  
+  export interface DashboardMetric {
+    id: string
+    label: string
+    value: number | string
+    change?: number
+    trend?: "up" | "down" | "neutral"
+    icon?: string
+  }
+  
+  export interface ClassSummary {
+    id: string
+    name: string
+    studentCount: number
+    averageGrade?: number
+    nextSession?: string
+  }
+  
+  export interface DashboardFilters {
+    timeRange?: "day" | "week" | "month" | "year"
+    classId?: string
+  }
+    export interface DashboardData {
+        stats: DashboardStats
+        classSummaries: ClassSummary[]
+        recentActivity: ActivityItem[]
+    }  

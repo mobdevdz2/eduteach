@@ -39,8 +39,10 @@ export function CalendarWeekView({
       <DayPilotCalendar 
         {...config} 
         ref={calendarRef} 
-        events={events} 
-        startDate={date} 
+        events={events}
+        c 
+        startDate={date}
+         
       />
     </div>
   )

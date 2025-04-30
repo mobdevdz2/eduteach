@@ -26,10 +26,11 @@ import {
   useDeleteCalendarEvents,
 } from "@/services/calendarEvents-service"
 import { getEventColor } from "@/lib/calendar-utils"
+import { Day } from "react-day-picker"
 
 export default function DayPilotCalendarView() {
   const [view, setView] = useState<"day" | "week" | "month" | "resources">("week")
-  const [date, setDate] = useState(new DayPilot.Date())
+  const [date, setDate] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvents[]>([])
   const [isEventDialogOpen, setIsEventDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -61,12 +62,12 @@ export default function DayPilotCalendarView() {
   useEffect(() => {
     if (calendarRef.current?.control) {
       calendarRef.current.control.update({
-        startDate: date,
+        startDate: new DayPilot.Date(date.toISOString()),
       })
     }
     if (monthRef.current?.control) {
       monthRef.current.control.update({
-        startDate: date,
+        startDate: new DayPilot.Date(date.toISOString()),
       })
     }
   }, [date, view])
@@ -80,7 +81,7 @@ export default function DayPilotCalendarView() {
           const formattedEvents = data?.map((event: any) => ({
             ...event,
             color: getEventColor(event.type),
-           
+
           }))
           setEvents(formattedEvents)
         },
@@ -92,6 +93,7 @@ export default function DayPilotCalendarView() {
     const event = args.e.data
     setSelectedEvent(event)
     setNewEvent(event)
+    console.log({event})
     setIsEventDialogOpen(true)
   }
 
@@ -167,7 +169,7 @@ export default function DayPilotCalendarView() {
   }
 
   function handleNavigatorChange(newDate: DayPilot.Date) {
-    setDate(newDate)
+    setDate(newDate.toDate())
   }
 
   function handleAddNewEvent() {
@@ -186,7 +188,7 @@ export default function DayPilotCalendarView() {
 
   const calendarProps = {
     events,
-    date,
+    date: new DayPilot.Date(date.toISOString()),
     calendarRef,
     handleEventClick,
     handleTimeRangeSelected,
@@ -198,7 +200,7 @@ export default function DayPilotCalendarView() {
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <Card className="md:w-64">
           <CalendarNavigator
-            date={date}
+            date={new DayPilot.Date(date.toISOString())}
             onDateChange={handleNavigatorChange}
             onAddEvent={handleAddNewEvent}
           />
@@ -213,9 +215,60 @@ export default function DayPilotCalendarView() {
                 <TabsTrigger value="month">Month</TabsTrigger>
                 <TabsTrigger value="resources">Resources</TabsTrigger>
               </TabsList>
-              <div className="text-lg font-semibold">
-                {date instanceof Date && !isNaN(date.getTime()) ? format(date, "MMMM yyyy") : "Invalid date"}
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const newDate = new Date(date);
+                    if (view === "day") {
+                      newDate.setDate(date.getDate() - 1);
+                    } else if (view === "week") {
+                      newDate.setDate(date.getDate() - 7);
+                    } else {
+                      newDate.setMonth(date.getMonth() - 1);
+                    }
+                    setDate(newDate);
+                  }}
+                >
+                  Previous
+                </Button>
+
+                <div className="text-lg font-semibold min-w-40 text-center">
+                  {date instanceof Date && !isNaN(date.getTime())
+                    ? format(date, view === "month" ? "MMMM yyyy" : "MMM d, yyyy")
+                    : "Invalid date"}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const newDate = new Date(date);
+                    if (view === "day") {
+                      newDate.setDate(date.getDate() + 1);
+                    } else if (view === "week") {
+                      newDate.setDate(date.getDate() + 7);
+                    } else {
+                      newDate.setMonth(date.getMonth() + 1);
+                    }
+                    setDate(newDate);
+                  }}
+                >
+                  Next
+                </Button>
               </div>
+
+              <Button
+                variant="default"
+                size="sm"
+                className="flex items-center gap-1"
+                onClick={handleAddNewEvent}
+              >
+                <Plus size={16} />
+                <span>New Event</span>
+              </Button>
             </div>
 
             <TabsContent value="day" className="mt-0">

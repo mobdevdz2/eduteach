@@ -27,7 +27,7 @@ export function useCreateCalendarEvents() {
     mutationFn: calendarEventsService.create,
     onSuccess: () => {
       toast.success("CalendarEvents created successfully");
-      router.push("/calendarEvents");
+      router.push("/calendar-events");
     },
     onError: (error: Error) => {
       toast.error(error.message);

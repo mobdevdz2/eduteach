@@ -15,7 +15,14 @@ const { createInsertSchema } = createSchemaFactory({
 
 
 
-export const organizationInsertSchema = createInsertSchema(organizations)
+export const organizationInsertSchema = createInsertSchema(organizations, {
+  id: (schema) => schema.optional(),
+  createdAt: (schema) => schema.optional(),
+  updatedAt: (schema) => schema.optional(),
+  name: (schema) => schema.min(2),
+  ownerId: (schema) => schema.optional(),
+  
+})
 export const userInsertSchema = createInsertSchema(users)
 export const accountInsertSchema = createInsertSchema(accounts)
 export const sessionInsertSchema = createInsertSchema(sessions)
@@ -30,7 +37,17 @@ export const assignmentSubmissionInsertSchema = createInsertSchema(assignmentSub
 export const gradeInsertSchema = createInsertSchema(grades)
 export const materialInsertSchema = createInsertSchema(materials)
 export const lessonPlanInsertSchema = createInsertSchema(lessonPlans)
-export const calendarEventInsertSchema = createInsertSchema(calendarEvents)
+export const calendarEventInsertSchema = createInsertSchema(calendarEvents, {
+  text: (schema) => schema.min(2),
+  start: (schema) => schema.describe("Start date"),
+  end: (schema) => schema.describe("End date"),
+  type: (schema) => schema.optional(),
+  location: (schema) => schema.optional(),
+  description: (schema) => schema.optional(),
+  userId: (schema) => schema.uuid(),
+})
+
+
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),

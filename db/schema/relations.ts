@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { users, organizations, subscriptions, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents, chats } from "./tables";
+import { users, organizations,chatMessages, subscriptions, classes, students, classStudents, assignments, assignmentSubmissions, grades, materials, lessonPlans, calendarEvents, chats } from "./tables";
   
 
 // Relations
@@ -176,4 +176,21 @@ export const usersRelations = relations(users, ({ one, many }) => ({
       references: [assignments.id],
     }),
   }));
+  
+
+  export const chatThreadsRelations = relations(chats, ({ one, many }) => ({
+    user: one(users, {
+      fields: [chats.userId],
+      references: [users.id],
+    }),
+    messages: many(chatMessages),
+  }))
+  
+  export const chatMessagesRelations = relations(chatMessages, ({ one }) => ({
+    thread: one(chats, {
+      fields: [chatMessages.threadId],
+      references: [chats.id],
+    }),
+  }))
+  
   

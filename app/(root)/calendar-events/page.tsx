@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { serverService } from "@/lib/server";
 import { SiteHeader } from "@/components/shared/site-header";
 import CalendarEventsView from "./view";
+import "./calendar.css"
 
 async function getCalendarEventsData() {
   return await serverService.calendarEvents.findMany({});

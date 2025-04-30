@@ -499,3 +499,24 @@ export const subscriptions = pgTable(
     method: "email" | "notification";
   }
 
+
+  // Chat messages table for storing message history
+export const chatMessages = pgTable(
+  "chat_messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    threadId: uuid("thread_id")
+      .notNull()
+      .references(() => chats.id, { onDelete: "cascade" }),
+    role: text("role").notNull(), // 'user' or 'assistant'
+    content: text("content").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    fileIds: text("file_ids").array(), // Array of OpenAI file IDs attached to this message
+  },
+  // @ts-ignore
+  (table) => {
+    return [index("chat_message_thread_idx").on(table.threadId)]
+  },
+)
+
+
